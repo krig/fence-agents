@@ -8,8 +8,6 @@ sys.path.append("/usr/share/fence")
 from fencing import *
 from fencing import fail, fail_usage, EC_TIMED_OUT, run_delay
 
-from azure.common.credentials import ServicePrincipalCredentials
-from azure.mgmt.compute import ComputeManagementClient
 
 #BEGIN_VERSION_GENERATION
 RELEASE_VERSION="4.0.24.6-7e576"
@@ -18,6 +16,12 @@ REDHAT_COPYRIGHT="Copyright (C) Red Hat, Inc. 2004-2010 All rights reserved."
 #END_VERSION_GENERATION
 
 def get_power_status(conn, options):
+        try:
+                from azure.common.credentials import ServicePrincipalCredentials
+                from azure.mgmt.compute import ComputeManagementClient
+        except ImportError:
+		        fail_usage("Azure library not found or not accessible")
+
         logging.info("getting power status for VM " + options["--vmname"])
         tenantid = options["--tenandId"]
         rgName = options["--resourceGroup"]
@@ -49,6 +53,12 @@ def get_power_status(conn, options):
         return "off"
 
 def set_power_status(conn, options):
+        try:
+                from azure.common.credentials import ServicePrincipalCredentials
+                from azure.mgmt.compute import ComputeManagementClient
+        except ImportError:
+		        fail_usage("Azure library not found or not accessible")
+
         logging.info("setting power status for VM " + options["--vmname"] + " to " + options["--action"])
         tenantid = options["--tenandId"]
         rgName = options["--resourceGroup"]
